@@ -6,7 +6,7 @@ var theQuestions = [
     {
         question: "Where is Brady From?",
         answers: ["El Paso, TX", "Miami, FL", "Spartanburg, SC", "Paris, France"],
-        correctAnswer: "EL Paso, TX",
+        correctAnswer: "El Paso, TX",
     },
     {
         question: "Where was Brady Purchased?",
@@ -58,8 +58,10 @@ var game = {
         $('#timer').html(game.counter);
         if(game.counter<=0){
 
-                calculateScore();
-        
+            clearInterval(time);
+            $("#timer").empty();
+            calculateScore();
+            $("#submitButton").empty();
                 alert("Time Up!")
             }
         }
@@ -91,14 +93,15 @@ function letsgo() {
         breakerA = $("<br>")
         $("#triviaQuiz").append(breakerA)
     };
+    var sbutton = $("<button>")
+    sbutton.text("Submit")
+    $("#submitButton").append(sbutton)
 
 }
 
 
 function calculateScore() {
 
-    clearInterval(time);
-    $("#timer").empty();
     
     $.each($('input[name="question0"]:checked'), function(){
         if($(this).attr("value")===theQuestions[0].correctAnswer){
@@ -156,12 +159,33 @@ function calculateScore() {
             game.wrongAnswers++;
         }
     });
-    $("#triviaQuiz").text("correct:" + game.rightAnswers + " " + "incorrect" + game.wrongAnswers)
+
+    $("#triviaQuiz").empty()
+    $("#triviaQuiz").append("<h4>" + "The Correct Answers Were: " + "</h4>")
+    for (let i = 0; i < theQuestions.length; i++) {
+        $("#triviaQuiz").append(theQuestions[i].correctAnswer + "<br>")
+        }
+        $("#triviaQuiz").append("Correct Answers : " + " " + game.rightAnswers + " " + "Incorrect Answers:" + game.wrongAnswers)
+
+        var abutton = $("<button>")
+        abutton.text("Play Again")
+        $("#playAgainButton").append(abutton)
+        $("#playAgainButton").on("click", function() {
+            $("#triviaQuiz").empty();
+            game.counter = 90;
+            letsgo();
+            $("#playAgainButton").empty();
+        })
     
 }
 
+
 $("#submitButton").on("click", function() {
+    clearInterval(time);
+    $("#timer").empty();
     calculateScore();
+    $("#submitButton").empty();
+
 })
 
 
